@@ -74,6 +74,8 @@ public class SlidingMenu extends RelativeLayout {
 
 	private OnCloseListener mCloseListener;
 
+    private OnPageChangeListener mExternalPageListener;
+
 	/**
 	 * The listener interface for receiving onOpen events.
 	 * The class that is interested in processing a onOpen
@@ -217,9 +219,16 @@ public class SlidingMenu extends RelativeLayout {
 			public static final int POSITION_SECONDARY_OPEN = 2;
 
 			public void onPageScrolled(int position, float positionOffset,
-					int positionOffsetPixels) { }
+					int positionOffsetPixels) {
+                if(mExternalPageListener != null){
+                    mExternalPageListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                }
+            }
 
 			public void onPageSelected(int position) {
+                if(mExternalPageListener != null){
+                    mExternalPageListener.onPageSelected(position);
+                }
 				if (position == POSITION_OPEN && mOpenListener != null) {
 					mOpenListener.onOpen();
 				} else if (position == POSITION_CLOSE && mCloseListener != null) {
@@ -921,6 +930,10 @@ public class SlidingMenu extends RelativeLayout {
 	public void setOnClosedListener(OnClosedListener listener) {
 		mViewAbove.setOnClosedListener(listener);
 	}
+
+    public void setOnPageChangeListener(OnPageChangeListener listener){
+        mExternalPageListener = listener;
+    }
 
 	public static class SavedState extends BaseSavedState {
 

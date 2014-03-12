@@ -5,6 +5,8 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.v4.view.KeyEventCompat;
@@ -829,7 +831,19 @@ public class CustomViewAbove extends ViewGroup {
 		mViewBehind.drawShadow(mContent, canvas);
 		mViewBehind.drawFade(mContent, canvas, getPercentOpen());
 		mViewBehind.drawSelector(mContent, canvas, getPercentOpen());
+        drawFade(mContent, canvas, getPercentOpen());
 	}
+
+    private final Paint mFadePaint = new Paint();
+
+    public void drawFade(View content, Canvas canvas, float openPercent) {
+        if (openPercent < 0.1f) return;
+        final int alpha = (int) (96f * Math.abs(openPercent));
+        mFadePaint.setColor(Color.argb(alpha, 0, 0, 0));
+        int left = content.getLeft();
+        int right = content.getRight();
+        canvas.drawRect(left, 0, right, getHeight(), mFadePaint);
+    }
 
 	// variables for drawing
 	private float mScrollX = 0.0f;
